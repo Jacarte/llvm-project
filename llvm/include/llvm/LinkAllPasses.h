@@ -69,7 +69,7 @@ namespace {
 
       (void) llvm::createAAEvalPass();
       (void) llvm::createAggressiveDCEPass();
-      (void) llvm::createAggressiveInstCombinerPass();
+      //(void) llvm::createAggressiveInstCombinerPass();
       (void) llvm::createBitTrackingDCEPass();
       (void) llvm::createOpenMPOptLegacyPass();
       (void) llvm::createArgumentPromotionPass();
@@ -88,7 +88,7 @@ namespace {
       (void) llvm::createStructurizeCFGPass();
       (void) llvm::createLibCallsShrinkWrapPass();
       (void) llvm::createCalledValuePropagationPass();
-      (void) llvm::createConstantMergePass();
+      //(void) llvm::createConstantMergePass();
       (void) llvm::createConstantPropagationPass();
       (void) llvm::createControlHeightReductionLegacyPass();
       (void) llvm::createCostModelAnalysisPass();
@@ -121,7 +121,7 @@ namespace {
       (void) llvm::createInductiveRangeCheckEliminationPass();
       (void) llvm::createIndVarSimplifyPass();
       (void) llvm::createInstSimplifyLegacyPass();
-      (void) llvm::createInstructionCombiningPass();
+      //(void) llvm::createInstructionCombiningPass();
       (void) llvm::createInternalizePass();
       (void) llvm::createLCSSAPass();
       (void) llvm::createLegacyDivergenceAnalysisPass();
