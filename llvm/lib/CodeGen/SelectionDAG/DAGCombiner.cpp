@@ -1672,8 +1672,8 @@ SDValue DAGCombiner::visit(SDNode *N) {
 
 SDValue DAGCombiner::combine(SDNode *N) {
   SDValue RV;
-  if (!DisableGenericCombines)
-    RV = visit(N);
+  //if (!DisableGenericCombines)
+  //  RV = visit(N);
 
   // If nothing happened, try a target-specific DAG combine.
   if (!RV.getNode()) {
