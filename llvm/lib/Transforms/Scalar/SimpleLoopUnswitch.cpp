@@ -2846,7 +2846,6 @@ static bool unswitchLoop(Loop &L, DominatorTree &DT, LoopInfo &LI,
                          ScalarEvolution *SE, MemorySSAUpdater *MSSAU) {
   assert(L.isRecursivelyLCSSAForm(DT, LI) &&
          "Loops must be in LCSSA form before unswitching.");
-  bool Changed = false;
 
   // Must be in loop simplified form: we need a preheader and dedicated exits.
   if (!L.isLoopSimplifyForm())
@@ -2878,7 +2877,7 @@ static bool unswitchLoop(Loop &L, DominatorTree &DT, LoopInfo &LI,
     return true;
 
   // No other opportunities to unswitch.
-  return Changed;
+  return false;
 }
 
 PreservedAnalyses SimpleLoopUnswitchPass::run(Loop &L, LoopAnalysisManager &AM,
