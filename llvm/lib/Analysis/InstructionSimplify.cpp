@@ -4614,6 +4614,18 @@ Value *llvm::SimplifyExtractElementInst(Value *Vec, Value *Idx,
 static Value *SimplifyPHINode(PHINode *PN, const SimplifyQuery &Q) {
 
   // JDR: can't disable this w/o breaking the compiler
+  // Is there an identical PHI node before this one in this basic block?
+  for (PHINode &Src : PN->getParent()->phis()) {
+    // Once we've reached the PHI node we've been asked about, stop looking.
+    if (&Src == PN)
+      break;
+    // If the previous PHI is currently trivially dead, ignore it,
+    // it might have been already recorded as being dead.
+    if (Src.use_empty())
+      continue;
+    if (PN->isIdenticalToWhenDefined(&Src))
+      return &Src;
+  }
 
   // If all of the PHI's incoming values are the same then replace the PHI node
   // with the common value.
