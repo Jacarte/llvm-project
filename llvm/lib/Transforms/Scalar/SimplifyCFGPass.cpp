@@ -234,6 +234,10 @@ static void applyCommandLineOverridesToOptions(SimplifyCFGOptions &Options) {
     Options.SinkCommonInsts = UserSinkCommonInsts;
 }
 
+SimplifyCFGPass::SimplifyCFGPass() : Options() {
+  applyCommandLineOverridesToOptions(Options);
+}
+
 SimplifyCFGPass::SimplifyCFGPass(const SimplifyCFGOptions &Opts)
     : Options(Opts) {
   applyCommandLineOverridesToOptions(Options);
