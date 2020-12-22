@@ -259,8 +259,8 @@ static Value *expandBinOp(Instruction::BinaryOps Opcode, Value *V,
     return nullptr;
 
   // Recursion is always used, so bail out at once if we already hit the limit.
-  if (!MaxRecurse--)
   auto *B = dyn_cast<BinaryOperator>(V);
+
   if (!B || B->getOpcode() != OpcodeToExpand)
     return nullptr;
   Value *B0 = B->getOperand(0), *B1 = B->getOperand(1);
