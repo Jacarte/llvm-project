@@ -1722,7 +1722,7 @@ SDValue DAGCombiner::combine(SDNode *N) {
 
   // If N is a commutative binary node, try to eliminate it if the commuted
   // version is already present in the DAG.
-  if (!RV.getNode() && TLI.isCommutativeBinOp(N->getOpcode()) &&
+  /*if (!RV.getNode() && TLI.isCommutativeBinOp(N->getOpcode()) &&
       N->getNumValues() == 1) {
     SDValue N0 = N->getOperand(0);
     SDValue N1 = N->getOperand(1);
@@ -1735,7 +1735,7 @@ SDValue DAGCombiner::combine(SDNode *N) {
       if (CSENode)
         return SDValue(CSENode, 0);
     }
-  }
+  }*/
 
   return RV;
 }
