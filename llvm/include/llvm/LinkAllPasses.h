@@ -69,7 +69,7 @@ namespace {
 
       (void) llvm::createAAEvalPass();
       (void) llvm::createAggressiveDCEPass();
-      (void) llvm::createAggressiveInstCombinerPass();
+      // (void) llvm::createAggressiveInstCombinerPass();
       (void) llvm::createBitTrackingDCEPass();
       (void) llvm::createOpenMPOptLegacyPass();
       (void) llvm::createArgumentPromotionPass();
@@ -88,7 +88,7 @@ namespace {
       (void) llvm::createStructurizeCFGPass();
       (void) llvm::createLibCallsShrinkWrapPass();
       (void) llvm::createCalledValuePropagationPass();
-      (void) llvm::createConstantMergePass();
+      //CROW (void) llvm::createConstantMergePass();
       (void) llvm::createControlHeightReductionLegacyPass();
       (void) llvm::createCostModelAnalysisPass();
       (void) llvm::createDeadArgEliminationPass();
@@ -118,7 +118,7 @@ namespace {
       (void) llvm::createInductiveRangeCheckEliminationPass();
       (void) llvm::createIndVarSimplifyPass();
       (void) llvm::createInstSimplifyLegacyPass();
-      (void) llvm::createInstructionCombiningPass();
+      // (void) llvm::createInstructionCombiningPass();
       (void) llvm::createInternalizePass();
       (void) llvm::createLCSSAPass();
       (void) llvm::createLegacyDivergenceAnalysisPass();
@@ -143,7 +143,7 @@ namespace {
       (void) llvm::createLowerExpectIntrinsicPass();
       (void) llvm::createLowerInvokePass();
       (void) llvm::createLowerSwitchPass();
-      (void) llvm::createNaryReassociatePass();
+      // CROW (void) llvm::createNaryReassociatePass();
       (void) llvm::createObjCARCAAWrapperPass();
       (void) llvm::createObjCARCAPElimPass();
       (void) llvm::createObjCARCExpandPass();
@@ -157,7 +157,7 @@ namespace {
       (void) llvm::createPostDomPrinterPass();
       (void) llvm::createPostDomOnlyViewerPass();
       (void) llvm::createPostDomViewerPass();
-      (void) llvm::createReassociatePass();
+      // CROW (void) llvm::createReassociatePass();
       (void) llvm::createRedundantDbgInstEliminationPass();
       (void) llvm::createRegionInfoPass();
       (void) llvm::createRegionOnlyPrinterPass();
@@ -176,7 +176,7 @@ namespace {
       (void) llvm::createJumpThreadingPass();
       (void) llvm::createUnifyFunctionExitNodesPass();
       (void) llvm::createInstCountPass();
-      (void) llvm::createConstantHoistingPass();
+      // CROW (void) llvm::createConstantHoistingPass();
       (void) llvm::createCodeGenPreparePass();
       (void) llvm::createEntryExitInstrumenterPass();
       (void) llvm::createPostInlineEntryExitInstrumenterPass();
@@ -213,7 +213,7 @@ namespace {
       (void) llvm::createLoadStoreVectorizerPass();
       (void) llvm::createVectorCombinePass();
       (void) llvm::createPartiallyInlineLibCallsPass();
-      (void) llvm::createScalarizerPass();
+      // (void) llvm::createScalarizerPass();
       (void) llvm::createSeparateConstOffsetFromGEPPass();
       (void) llvm::createSpeculativeExecutionPass();
       (void) llvm::createSpeculativeExecutionIfHasBranchDivergencePass();

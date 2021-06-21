@@ -527,28 +527,28 @@ PassBuilder::buildO1FunctionSimplificationPipeline(OptimizationLevel Level,
   FPM.addPass(EarlyCSEPass(true /* Enable mem-ssa. */));
 
   // Hoisting of scalars and load expressions.
-  FPM.addPass(SimplifyCFGPass());
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(SimplifyCFGPass());
+// CROW   FPM.addPass(InstCombinePass());
 
   FPM.addPass(LibCallsShrinkWrapPass());
 
   invokePeepholeEPCallbacks(FPM, Level);
 
-  FPM.addPass(SimplifyCFGPass());
+// CROW   FPM.addPass(SimplifyCFGPass());
 
   // Form canonically associated expression trees, and simplify the trees using
   // basic mathematical properties. For example, this will form (nearly)
   // minimal multiplication trees.
-  FPM.addPass(ReassociatePass());
+// CROW   FPM.addPass(ReassociatePass());
 
   // Add the primary loop simplification pipeline.
   // FIXME: Currently this is split into two loop pass pipelines because we run
   // some function passes in between them. These can and should be removed
   // and/or replaced by scheduling the loop pass equivalents in the correct
   // positions. But those equivalent passes aren't powerful enough yet.
-  // Specifically, `SimplifyCFGPass` and `InstCombinePass` are currently still
-  // used. We have `LoopSimplifyCFGPass` which isn't yet powerful enough yet to
-  // fully replace `SimplifyCFGPass`, and the closest to the other we have is
+// CROW   // Specifically, `SimplifyCFGPass` and `InstCombinePass` are currently still
+// CROW   // used. We have `LoopSimplifyCFGPass` which isn't yet powerful enough yet to
+// CROW   // fully replace `SimplifyCFGPass`, and the closest to the other we have is
   // `LoopInstSimplify`.
   LoopPassManager LPM1(DebugLogging), LPM2(DebugLogging);
 
@@ -556,7 +556,7 @@ PassBuilder::buildO1FunctionSimplificationPipeline(OptimizationLevel Level,
   // passes run, either when iterating on a loop or on inner loops with
   // implications on the outer loop.
   LPM1.addPass(LoopInstSimplifyPass());
-  LPM1.addPass(LoopSimplifyCFGPass());
+// CROW   LPM1.addPass(LoopSimplifyCFGPass());
 
   LPM1.addPass(LoopRotatePass(/* Disable header duplication */ true));
   // TODO: Investigate promotion cap for O1.
@@ -591,8 +591,8 @@ PassBuilder::buildO1FunctionSimplificationPipeline(OptimizationLevel Level,
   FPM.addPass(createFunctionToLoopPassAdaptor(
       std::move(LPM1), EnableMSSALoopDependency, /*UseBlockFrequencyInfo=*/true,
       DebugLogging));
-  FPM.addPass(SimplifyCFGPass());
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(SimplifyCFGPass());
+// CROW   FPM.addPass(InstCombinePass());
   if (EnableLoopFlatten)
     FPM.addPass(LoopFlattenPass());
   // The loop passes in LPM2 (LoopFullUnrollPass) do not preserve MemorySSA.
@@ -619,7 +619,7 @@ PassBuilder::buildO1FunctionSimplificationPipeline(OptimizationLevel Level,
 
   // Run instcombine after redundancy and dead bit elimination to exploit
   // opportunities opened up by them.
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(FPM, Level);
 
   if (PTO.Coroutines)
@@ -632,8 +632,8 @@ PassBuilder::buildO1FunctionSimplificationPipeline(OptimizationLevel Level,
   // the simplifications and basic cleanup after all the simplifications.
   // TODO: Investigate if this is too expensive.
   FPM.addPass(ADCEPass());
-  FPM.addPass(SimplifyCFGPass());
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(SimplifyCFGPass());
+// CROW   FPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(FPM, Level);
 
   return FPM;
@@ -667,7 +667,7 @@ PassBuilder::buildFunctionSimplificationPipeline(OptimizationLevel Level,
   // Global value numbering based sinking.
   if (EnableGVNSink) {
     FPM.addPass(GVNSinkPass());
-    FPM.addPass(SimplifyCFGPass());
+// CROW     FPM.addPass(SimplifyCFGPass());
   }
 
   if (EnableConstraintElimination)
@@ -680,10 +680,10 @@ PassBuilder::buildFunctionSimplificationPipeline(OptimizationLevel Level,
   FPM.addPass(JumpThreadingPass());
   FPM.addPass(CorrelatedValuePropagationPass());
 
-  FPM.addPass(SimplifyCFGPass());
-  if (Level == OptimizationLevel::O3)
-    FPM.addPass(AggressiveInstCombinePass());
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(SimplifyCFGPass());
+  //if (Level == OptimizationLevel::O3)
+// CROW     FPM.addPass(AggressiveInstCombinePass());
+// CROW   FPM.addPass(InstCombinePass());
 
   if (!Level.isOptimizingForSize())
     FPM.addPass(LibCallsShrinkWrapPass());
@@ -697,21 +697,21 @@ PassBuilder::buildFunctionSimplificationPipeline(OptimizationLevel Level,
     FPM.addPass(PGOMemOPSizeOpt());
 
   FPM.addPass(TailCallElimPass());
-  FPM.addPass(SimplifyCFGPass());
+// CROW   FPM.addPass(SimplifyCFGPass());
 
   // Form canonically associated expression trees, and simplify the trees using
   // basic mathematical properties. For example, this will form (nearly)
   // minimal multiplication trees.
-  FPM.addPass(ReassociatePass());
+// CROW   FPM.addPass(ReassociatePass());
 
   // Add the primary loop simplification pipeline.
   // FIXME: Currently this is split into two loop pass pipelines because we run
   // some function passes in between them. These can and should be removed
   // and/or replaced by scheduling the loop pass equivalents in the correct
   // positions. But those equivalent passes aren't powerful enough yet.
-  // Specifically, `SimplifyCFGPass` and `InstCombinePass` are currently still
-  // used. We have `LoopSimplifyCFGPass` which isn't yet powerful enough yet to
-  // fully replace `SimplifyCFGPass`, and the closest to the other we have is
+// CROW   // Specifically, `SimplifyCFGPass` and `InstCombinePass` are currently still
+// CROW   // used. We have `LoopSimplifyCFGPass` which isn't yet powerful enough yet to
+// CROW   // fully replace `SimplifyCFGPass`, and the closest to the other we have is
   // `LoopInstSimplify`.
   LoopPassManager LPM1(DebugLogging), LPM2(DebugLogging);
 
@@ -719,7 +719,7 @@ PassBuilder::buildFunctionSimplificationPipeline(OptimizationLevel Level,
   // passes run, either when iterating on a loop or on inner loops with
   // implications on the outer loop.
   LPM1.addPass(LoopInstSimplifyPass());
-  LPM1.addPass(LoopSimplifyCFGPass());
+// CROW   LPM1.addPass(LoopSimplifyCFGPass());
 
   // Disable header duplication in loop rotation at -Oz.
   LPM1.addPass(LoopRotatePass(Level != OptimizationLevel::Oz));
@@ -755,8 +755,8 @@ PassBuilder::buildFunctionSimplificationPipeline(OptimizationLevel Level,
   FPM.addPass(createFunctionToLoopPassAdaptor(
       std::move(LPM1), EnableMSSALoopDependency, /*UseBlockFrequencyInfo=*/true,
       DebugLogging));
-  FPM.addPass(SimplifyCFGPass());
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(SimplifyCFGPass());
+// CROW   FPM.addPass(InstCombinePass());
   if (EnableLoopFlatten)
     FPM.addPass(LoopFlattenPass());
   // The loop passes in LPM2 (LoopIdiomRecognizePass, IndVarSimplifyPass,
@@ -791,7 +791,7 @@ PassBuilder::buildFunctionSimplificationPipeline(OptimizationLevel Level,
 
   // Run instcombine after redundancy and dead bit elimination to exploit
   // opportunities opened up by them.
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(FPM, Level);
 
   // Re-consider control flow based optimizations after redundancy elimination,
@@ -815,8 +815,8 @@ PassBuilder::buildFunctionSimplificationPipeline(OptimizationLevel Level,
   for (auto &C : ScalarOptimizerLateEPCallbacks)
     C(FPM, Level);
 
-  FPM.addPass(SimplifyCFGPass());
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(SimplifyCFGPass());
+// CROW   FPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(FPM, Level);
 
   if (EnableCHR && Level == OptimizationLevel::O3 && PGOOpt &&
@@ -854,8 +854,8 @@ void PassBuilder::addPGOInstrPasses(ModulePassManager &MPM,
     FunctionPassManager FPM;
     FPM.addPass(SROA());
     FPM.addPass(EarlyCSEPass());    // Catch trivial redundancies.
-    FPM.addPass(SimplifyCFGPass()); // Merge & remove basic blocks.
-    FPM.addPass(InstCombinePass()); // Combine silly sequences.
+// CROW     FPM.addPass(SimplifyCFGPass()); // Merge & remove basic blocks.
+// CROW     FPM.addPass(InstCombinePass()); // Combine silly sequences.
     invokePeepholeEPCallbacks(FPM, Level);
 
     CGPipeline.addPass(createCGSCCToFunctionPassAdaptor(std::move(FPM)));
@@ -1040,7 +1040,7 @@ PassBuilder::buildModuleSimplificationPipeline(OptimizationLevel Level,
   // Create an early function pass manager to cleanup the output of the
   // frontend.
   FunctionPassManager EarlyFPM(DebugLogging);
-  EarlyFPM.addPass(SimplifyCFGPass());
+// CROW   EarlyFPM.addPass(SimplifyCFGPass());
   EarlyFPM.addPass(SROA());
   EarlyFPM.addPass(EarlyCSEPass());
   EarlyFPM.addPass(LowerExpectIntrinsicPass());
@@ -1055,8 +1055,8 @@ PassBuilder::buildModuleSimplificationPipeline(OptimizationLevel Level,
   // More details about SamplePGO design can be found in:
   // https://research.google.com/pubs/pub45290.html
   // FIXME: revisit how SampleProfileLoad/Inliner/ICP is structured.
-  if (LoadSampleProfile)
-    EarlyFPM.addPass(InstCombinePass());
+  // CROW if (LoadSampleProfile)
+// CROW     EarlyFPM.addPass(InstCombinePass());
   MPM.addPass(createModuleToFunctionPassAdaptor(std::move(EarlyFPM)));
 
   if (LoadSampleProfile) {
@@ -1117,10 +1117,10 @@ PassBuilder::buildModuleSimplificationPipeline(OptimizationLevel Level,
   // Create a small function pass pipeline to cleanup after all the global
   // optimizations.
   FunctionPassManager GlobalCleanupPM(DebugLogging);
-  GlobalCleanupPM.addPass(InstCombinePass());
+// CROW   GlobalCleanupPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(GlobalCleanupPM, Level);
 
-  GlobalCleanupPM.addPass(SimplifyCFGPass());
+// CROW   GlobalCleanupPM.addPass(SimplifyCFGPass());
   MPM.addPass(createModuleToFunctionPassAdaptor(std::move(GlobalCleanupPM)));
 
   // Add all the requested passes for instrumentation PGO, if requested.
@@ -1254,7 +1254,7 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
   OptimizePM.addPass(LoopLoadEliminationPass());
 
   // Cleanup after the loop optimization passes.
-  OptimizePM.addPass(InstCombinePass());
+// CROW   OptimizePM.addPass(InstCombinePass());
 
   if (Level.getSpeedupLevel() > 1 && ExtraVectorizerPasses) {
     // At higher optimization levels, try to clean up any runtime overlap and
@@ -1265,7 +1265,7 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
     // dead (or speculatable) control flows or more combining opportunities.
     OptimizePM.addPass(EarlyCSEPass());
     OptimizePM.addPass(CorrelatedValuePropagationPass());
-    OptimizePM.addPass(InstCombinePass());
+// CROW     OptimizePM.addPass(InstCombinePass());
     LoopPassManager LPM(DebugLogging);
     LPM.addPass(LICMPass(PTO.LicmMssaOptCap, PTO.LicmMssaNoAccForPromotionCap));
     LPM.addPass(
@@ -1274,8 +1274,8 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
     OptimizePM.addPass(createFunctionToLoopPassAdaptor(
         std::move(LPM), EnableMSSALoopDependency, /*UseBlockFrequencyInfo=*/true,
         DebugLogging));
-    OptimizePM.addPass(SimplifyCFGPass());
-    OptimizePM.addPass(InstCombinePass());
+// CROW     OptimizePM.addPass(SimplifyCFGPass());
+// CROW     OptimizePM.addPass(InstCombinePass());
   }
 
   // Now that we've formed fast to execute loop structures, we do further
@@ -1289,12 +1289,12 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
   // before SLP vectorization.
   // FIXME: study whether hoisting and/or sinking of common instructions should
   //        be delayed until after SLP vectorizer.
-  OptimizePM.addPass(SimplifyCFGPass(SimplifyCFGOptions()
+  /*OptimizePM.addPass(SimplifyCFGPass(SimplifyCFGOptions()
                                          .forwardSwitchCondToPhi(true)
                                          .convertSwitchToLookupTable(true)
                                          .needCanonicalLoops(false)
                                          .hoistCommonInsts(true)
-                                         .sinkCommonInsts(true)));
+                                         .sinkCommonInsts(true)));*/
 
   // Optimize parallel scalar instruction chains into SIMD instructions.
   if (PTO.SLPVectorization) {
@@ -1306,7 +1306,7 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
 
   // Enhance/cleanup vector code.
   OptimizePM.addPass(VectorCombinePass());
-  OptimizePM.addPass(InstCombinePass());
+// CROW   OptimizePM.addPass(InstCombinePass());
 
   // Unroll small loops to hide loop backedge latency and saturate any parallel
   // execution resources of an out-of-order processor. We also then need to
@@ -1322,7 +1322,7 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
       Level.getSpeedupLevel(), /*OnlyWhenForced=*/!PTO.LoopUnrolling,
       PTO.ForgetAllSCEVInLoopUnroll)));
   OptimizePM.addPass(WarnMissedTransformationsPass());
-  OptimizePM.addPass(InstCombinePass());
+// CROW   OptimizePM.addPass(InstCombinePass());
   OptimizePM.addPass(RequireAnalysisPass<OptimizationRemarkEmitterAnalysis, Function>());
   OptimizePM.addPass(createFunctionToLoopPassAdaptor(
       LICMPass(PTO.LicmMssaOptCap, PTO.LicmMssaNoAccForPromotionCap),
@@ -1389,7 +1389,7 @@ PassBuilder::buildModuleOptimizationPipeline(OptimizationLevel Level,
   // pipeline and maybe be the bottom of the canonicalization pipeline? Weird
   // ordering here.
   MPM.addPass(GlobalDCEPass());
-  MPM.addPass(ConstantMergePass());
+// CROW   MPM.addPass(ConstantMergePass());
 
   return MPM;
 }
@@ -1651,7 +1651,7 @@ PassBuilder::buildLTODefaultPipeline(OptimizationLevel Level,
 
   // Linking modules together can lead to duplicate global constant, only
   // keep one copy of each constant.
-  MPM.addPass(ConstantMergePass());
+// CROW   MPM.addPass(ConstantMergePass());
 
   // Remove unused arguments from functions.
   MPM.addPass(DeadArgumentEliminationPass());
@@ -1661,9 +1661,9 @@ PassBuilder::buildLTODefaultPipeline(OptimizationLevel Level,
   // function pointers.  When this happens, we often have to resolve varargs
   // calls, etc, so let instcombine do this.
   FunctionPassManager PeepholeFPM(DebugLogging);
-  if (Level == OptimizationLevel::O3)
-    PeepholeFPM.addPass(AggressiveInstCombinePass());
-  PeepholeFPM.addPass(InstCombinePass());
+  // CROW if (Level == OptimizationLevel::O3)
+// CROW     PeepholeFPM.addPass(AggressiveInstCombinePass());
+// CROW   PeepholeFPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(PeepholeFPM, Level);
 
   MPM.addPass(createModuleToFunctionPassAdaptor(std::move(PeepholeFPM)));
@@ -1685,7 +1685,7 @@ PassBuilder::buildLTODefaultPipeline(OptimizationLevel Level,
 
   FunctionPassManager FPM(DebugLogging);
   // The IPO Passes may leave cruft around. Clean up after them.
-  FPM.addPass(InstCombinePass());
+// CROW   FPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(FPM, Level);
 
   FPM.addPass(JumpThreadingPass(/*InsertFreezeWhenUnfoldingSelect*/ true));
@@ -1737,10 +1737,10 @@ PassBuilder::buildLTODefaultPipeline(OptimizationLevel Level,
   // loopVectorize. Enable them once the remaining issue with LPM
   // are sorted out.
 
-  MainFPM.addPass(InstCombinePass());
+// CROW   MainFPM.addPass(InstCombinePass());
   MainFPM.addPass(SimplifyCFGPass(SimplifyCFGOptions().hoistCommonInsts(true)));
   MainFPM.addPass(SCCPPass());
-  MainFPM.addPass(InstCombinePass());
+// CROW   MainFPM.addPass(InstCombinePass());
   MainFPM.addPass(BDCEPass());
 
   // FIXME: We may want to run SLPVectorizer here.
@@ -1753,7 +1753,7 @@ PassBuilder::buildLTODefaultPipeline(OptimizationLevel Level,
   // FIXME: Conditionally run LoadCombine here, after it's ported
   // (in case we still have this pass, given its questionable usefulness).
 
-  MainFPM.addPass(InstCombinePass());
+// CROW   MainFPM.addPass(InstCombinePass());
   invokePeepholeEPCallbacks(MainFPM, Level);
   MainFPM.addPass(JumpThreadingPass(/*InsertFreezeWhenUnfoldingSelect*/ true));
   MPM.addPass(createModuleToFunctionPassAdaptor(std::move(MainFPM)));

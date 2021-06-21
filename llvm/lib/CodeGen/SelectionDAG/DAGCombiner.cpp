@@ -1502,6 +1502,11 @@ bool DAGCombiner::recursivelyDeleteUnusedNodes(SDNode *N) {
 
 void DAGCombiner::Run(CombineLevel AtLevel) {
   // set the instance variables, so that the various visit routines may use it.
+  // CROW
+  // return
+  
+  return;
+
   Level = AtLevel;
   LegalDAG = Level >= AfterLegalizeDAG;
   LegalOperations = Level >= AfterLegalizeVectorOps;
